@@ -36,3 +36,6 @@ replay_pid*
 # Build
 build/
 .gradle/
+
+# Claude Code (fichier de contexte local)
+CLAUDE.local.md

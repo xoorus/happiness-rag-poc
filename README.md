@@ -94,7 +94,7 @@ La base est exposée uniquement sur `127.0.0.1:5433`. Sous PowerShell, écrire c
 
 - [x] Phase 1 : PostgreSQL + pgvector dans Docker Compose
 - [x] Phase 1 : Ollama et appel manuel des deux modèles
-- [ ] Phase 1 : squelette Kotlin / Spring Boot
+- [x] Phase 1 : squelette Kotlin / Spring Boot
 - [ ] Phase 2 : ingestion documentaire (parsing, chunking, embeddings, stockage)
 - [ ] Phase 3 : recherche vectorielle
 - [ ] Phase 4 : génération avec le LLM (prompt, historique client, sources)

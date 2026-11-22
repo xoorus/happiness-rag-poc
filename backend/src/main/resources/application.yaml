@@ -8,3 +8,9 @@ spring:
 
 ollama:
   url: ${OLLAMA_URL:http://localhost:11434}
+  embedding-model: embeddinggemma:300m
+  truncate: false
+  connect-timeout: 5s
+  read-timeout: 60s
+  query-template: "task: search result | query: {text}"
+  document-template: "title: {title} | text: {text}"
