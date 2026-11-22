@@ -28,7 +28,10 @@ class EmbeddingServiceImpl(
 
     override fun embedDocuments(documents: List<EmbeddingDocument>): List<Embedding> {
         require(documents.isNotEmpty()) { "Documents must not be empty" }
-        TODO("Not yet implemented")
+
+        return callOllama(
+            documents.map { documentTemplate.replace("{title}", it.title).replace("{text}", it.content) }
+        )
     }
 
     private fun callOllama(inputs: List<String>): List<Embedding> {
