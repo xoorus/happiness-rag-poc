@@ -93,13 +93,28 @@ La base est exposée uniquement sur `127.0.0.1:5433`. Sous PowerShell, écrire c
 ## Avancement
 
 - [x] Phase 1 : PostgreSQL + pgvector dans Docker Compose
-- [ ] Phase 1 : Ollama et appel manuel des deux modèles
+- [x] Phase 1 : Ollama et appel manuel des deux modèles
 - [ ] Phase 1 : squelette Kotlin / Spring Boot
 - [ ] Phase 2 : ingestion documentaire (parsing, chunking, embeddings, stockage)
 - [ ] Phase 3 : recherche vectorielle
 - [ ] Phase 4 : génération avec le LLM (prompt, historique client, sources)
 - [ ] Phase 5 : interface Angular
 - [ ] Phase 6 : évaluation, comparaison de paramètres et de modèles, métriques de latence
+
+## Mesures
+
+Mesures manuelles via l'API Ollama (`/api/generate`, `stream = false`), un seul essai par ligne. Prompt : « Un client veut renvoyer un album photo reçu abîmé. Que lui répondre en trois phrases ? ». Les chiffres seront refaits proprement (plusieurs essais, démarrage à chaud) quand le jeu de test existera.
+
+| Machine                           | Modèle | Thinking | Tokens générés | Vitesse (tokens/s) | Durée totale |
+|-----------------------------------|---|---|---|---|---|
+| PC, AMD Radeon RX 7700 XT (12 Go) | qwen3:8b | activé | 335 | 65,4 | 5,2 s |
+| PC, AMD Radeon RX 7700 XT (12 Go) | qwen3:8b | désactivé | 51 | 66,6 | 0,8 s |
+| Mac M4 Pro (24 Go)                | qwen3:8b | activé | à mesurer | à mesurer | à mesurer |
+| Mac M4 Pro (24 Go)                | qwen3:8b | désactivé | à mesurer | à mesurer | à mesurer |
+[README.md](README.md)
+Constats :
+- La vitesse de génération est la même avec ou sans thinking (environ 65 tokens/s) : le thinking ne ralentit pas le modèle, il lui fait générer environ 6,6 fois plus de tokens, donc la réponse arrive environ 6,5 fois plus tard.
+- Modèle d'embedding `embeddinggemma` : vecteurs de **768 dimensions**.
 
 ## Hors périmètre du premier POC
 

@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: happiness
+  datasource:
+    url: jdbc:postgresql://localhost:5433/happiness_poc
+    username: postgres
+    password: ${POSTGRES_PASSWORD:dev}
+
+ollama:
+  url: ${OLLAMA_URL:http://localhost:11434}
