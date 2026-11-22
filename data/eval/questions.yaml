@@ -1,0 +1,116 @@
+# Jeu d'évaluation du RAG (brouillon v1)
+#
+# Conventions :
+# - expected : passage principal attendu, désigné par "<id du document> > <titres Markdown exacts>"
+#   (le titre de niveau 1 est remplacé par l'id du document). null = aucune réponse dans les documents.
+# - related  : autres passages utiles pour rédiger une réponse complète (non comptés dans le Recall@5).
+# - facts    : faits que le brouillon de réponse doit contenir (évaluation de la fidélité, Phase 4/6).
+# - trap     : ce que la question cherche à piéger.
+#
+# Recall@5 : une question est réussie si "expected" figure dans les 5 premiers passages retrouvés.
+# Les questions avec expected = null sont exclues du Recall@5 (elles testent la non-invention).
+
+- id: q01
+  question: "On a reçu une veste il y a un mois, finalement elle ne nous sert pas. On peut se faire rembourser ?"
+  expected: "cgv > Article 7 – Rétractation et retours > 7.1 Droit de rétractation"
+  related:
+    - "cgv > Article 7 – Rétractation et retours > 7.3 Conditions communes à tout retour"
+    - "cgv > Article 7 – Rétractation et retours > 7.4 Frais de renvoi"
+    - "cgv > Article 7 – Rétractation et retours > 7.5 Remboursement"
+  facts:
+    - "oui, rétractation possible sous 6 semaines"
+    - "emballage d'origine exigé"
+    - "frais de renvoi à la charge de l'acheteur"
+    - "remboursement sous 14 jours"
+  trap: "1 mois dépasse 15 jours mais reste sous 6 semaines : ne pas répondre « délai dépassé »"
+
+- id: q02
+  question: "La veste en L est trop juste pour mon gars, comment on passe en XL et ça coûte combien ?"
+  expected: "cgv > Article 9 – Échange de taille"
+  related:
+    - "fiche-veste-softshell-hv > Taille ne convenant pas"
+    - "cgv > Article 7 – Rétractation et retours > 7.3 Conditions communes à tout retour"
+  facts:
+    - "échange possible sous 15 jours"
+    - "article non porté, avec ses étiquettes, dans son emballage d'origine"
+    - "frais de renvoi à la charge de l'acheteur"
+    - "5 € TTC facturés pour l'échange de taille"
+  trap: "la fiche du produit ne donne pas le prix : la réponse est dans un autre document"
+
+- id: q03
+  question: "La perceuse livrée hier ne démarre pas du tout. Vous faites quoi ?"
+  expected: "cgv > Article 8 – Produit défectueux"
+  related: []
+  facts:
+    - "contacter le service client avec le numéro de commande, une description du défaut et si possible une photo"
+    - "renvoi du même produit, à la même adresse, avec le même transporteur"
+  trap: "ne pas inventer un retour gratuit : les CGV ne précisent pas qui paie le renvoi du produit défectueux"
+
+- id: q04
+  question: "La batterie de notre PV-18 ne tient plus la charge au bout de 4 mois, c'est garanti ?"
+  expected: "fiche-perceuse-visseuse-pv18 > Garantie"
+  related:
+    - "cgv > Article 10 – Garanties > 10.1 Garantie commerciale"
+    - "cgv > Article 10 – Garanties > 10.2 Garantie légale"
+  facts:
+    - "les batteries sont garanties 3 mois seulement (pièces d'usure) : garantie commerciale expirée"
+    - "la garantie légale des vices cachés peut s'appliquer (2 ans à compter de la découverte)"
+  trap: "la règle précise de la fiche (3 mois) l'emporte sur la règle générale des CGV (6 mois)"
+
+- id: q05
+  question: "Notre perceuse a lâché après 8 mois d'utilisation, on est couverts ?"
+  expected: "cgv > Article 10 – Garanties > 10.2 Garantie légale"
+  related:
+    - "cgv > Article 10 – Garanties > 10.1 Garantie commerciale"
+    - "fiche-perceuse-visseuse-pv18 > Garantie"
+  facts:
+    - "la garantie commerciale de 6 mois est expirée"
+    - "la garantie légale des vices cachés s'applique pendant 2 ans à compter de la découverte du défaut"
+  trap: "deux garanties avec deux points de départ (livraison contre découverte du défaut)"
+
+- id: q06
+  question: "Pour une commande de 65 €, on paie combien de port ?"
+  expected: "cgv > Article 6 – Livraison"
+  related: []
+  facts:
+    - "6,90 € TTC"
+    - "livraison offerte à partir de 80 € TTC"
+  trap: "précision des chiffres : 65 € est sous le seuil de gratuité"
+
+- id: q07
+  question: "Comment on met la perceuse en marche arrière pour desserrer une vis ?"
+  expected: "fiche-perceuse-visseuse-pv18 > Utilisation > Inverseur du sens de rotation"
+  related: []
+  facts:
+    - "bouton inverseur au-dessus de la gâchette"
+    - "position retour (rotation à gauche) pour dévisser"
+  trap: "« retour » a ici un autre sens que dans les CGV, et aucun mot de la question ne figure dans le titre de la section"
+
+- id: q08
+  question: "Je suis un particulier, je peux acheter chez vous ?"
+  expected: "cgv > Article 1 – Objet et clientèle"
+  related: []
+  facts:
+    - "non, la vente est réservée aux professionnels"
+  trap: "règle d'éligibilité, pas une règle produit"
+
+- id: q09
+  question: "La batterie de la PV-18 tient combien de temps en usage continu ?"
+  expected: null
+  related:
+    - "fiche-perceuse-visseuse-pv18 > Caractéristiques techniques"
+    - "fiche-perceuse-visseuse-pv18 > Batteries et charge"
+  facts:
+    - "l'autonomie n'est pas indiquée dans la documentation"
+    - "peut citer les batteries 2,0 Ah et la charge en 1 heure, sans inventer de durée d'utilisation"
+  trap: "passages pertinents mais incomplets : le cas le plus propice à l'invention"
+
+- id: q10
+  question: "On peut régler en trois fois sans frais ?"
+  expected: null
+  related:
+    - "cgv > Article 5 – Paiement"
+  facts:
+    - "le paiement en plusieurs fois n'est pas mentionné"
+    - "moyens acceptés : carte bancaire et virement"
+  trap: "absence d'information, pas un refus explicite : ne pas affirmer que c'est interdit ni que c'est possible"
