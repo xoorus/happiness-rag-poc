@@ -109,11 +109,12 @@ Mesures manuelles via l'API Ollama (`/api/generate`, `stream = false`), un seul 
 |-----------------------------------|---|---|---|---|---|
 | PC, AMD Radeon RX 7700 XT (12 Go) | qwen3:8b | activé | 335 | 65,4 | 5,2 s |
 | PC, AMD Radeon RX 7700 XT (12 Go) | qwen3:8b | désactivé | 51 | 66,6 | 0,8 s |
-| Mac M4 Pro (24 Go)                | qwen3:8b | activé | à mesurer | à mesurer | à mesurer |
-| Mac M4 Pro (24 Go)                | qwen3:8b | désactivé | à mesurer | à mesurer | à mesurer |
+| Mac M4 Pro (24 Go)                | qwen3:8b | activé | 179 | 22,6 | 8,0 s |
+| Mac M4 Pro (24 Go)                | qwen3:8b | désactivé | 81 | 24,3 | 3,8 s |
 [README.md](README.md)
 Constats :
 - La vitesse de génération est la même avec ou sans thinking (environ 65 tokens/s) : le thinking ne ralentit pas le modèle, il lui fait générer environ 6,6 fois plus de tokens, donc la réponse arrive environ 6,5 fois plus tard.
+- Sur Mac M4 Pro (100 % GPU, modèle déjà chargé), la génération est environ 2,8 fois plus lente que sur la RX 7700 XT (environ 23 tokens/s contre 65).
 - Modèle d'embedding `embeddinggemma` : vecteurs de **768 dimensions**.
 
 ## Hors périmètre du premier POC
